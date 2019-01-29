@@ -31,3 +31,64 @@ def clip(gradients, maxValue):
     gradients = {"dWaa": dWaa, "dWax": dWax, "dWya": dWya, "db": db, "dby": dby}
 
     return gradients
+
+
+def sample(parameters, char_to_ix, seed):
+    """
+       Sample a sequence of characters according to a sequence of probability distributions output of the RNN
+
+       Arguments:
+       parameters -- python dictionary containing the parameters Waa, Wax, Wya, by, and b.
+       char_to_ix -- python dictionary mapping each character to an index.
+       seed -- used for grading purposes. Do not worry about it.
+
+       Returns:
+       indices -- a list of length n containing the indices of the sampled characters.
+       """
+    # retrieve parameters
+    Waa, Wax, Wya, by, b = parameters['Waa'], parameters['Wax'], parameters['Wya'], parameters['by'], parameters['b']
+    vocab_size = by.shape[0]
+    n_a = Waa.shape[1]
+
+    # init x and a
+    x = np.zeros((vocab_size, 1))
+    a_prev = np.zeros((n_a, 1))
+    # init result
+    indices = []
+    # init index that means flag of end
+    idx = -1
+    counter = 0
+    newline_character = char_to_ix['\n']
+
+    while (idx != newline_character and counter != 50):
+        # forward cell
+        a = np.tanh(np.dot(Wax, x) + np.dot(Waa, a_prev) + b)
+        z = np.dot(Wya, a) + by
+        y = softmax(z)
+
+        # to same with blog
+        np.random.seed(counter + seed)
+
+        # sample one from y
+        idx = np.random.choice(list(range(vocab_size)), p=y.ravel())
+
+        # add idx to result
+        indices.append(idx)
+
+        # gener a new x ,which x == y
+        x = np.zeros((vocab_size, 1))
+        x[idx] = 1
+
+        # set a
+        a_prev = a
+
+        # set seed to same blog
+        seed += 1
+        counter += 1
+
+    # if counter = 50,which means  the word that does not have flag of end
+    # ex.   one word  ==> aklsdjfkjas\n
+    if (counter == 50):
+        indices.append(char_to_ix['\n'])
+
+    return indices

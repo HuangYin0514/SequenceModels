@@ -24,6 +24,8 @@ if __name__ == '__main__':
     ix_to_char = {i: ch for i, ch in enumerate(sorted(chars))}
     print(ix_to_char)
 
+
+    """
     # test clip avoid exloarding gradient
     np.random.seed(3)
     dWax = np.random.randn(5, 3) * 10
@@ -38,3 +40,16 @@ if __name__ == '__main__':
     print("gradients[\"dWya\"][1][2] =", gradients["dWya"][1][2])
     print("gradients[\"db\"][4] =", gradients["db"][4])
     print("gradients[\"dby\"][1] =", gradients["dby"][1])
+    """
+    # test sample
+    np.random.seed(2)
+    _, n_a = 20, 100
+    Wax, Waa, Wya = np.random.randn(n_a, vocab_size), np.random.randn(n_a, n_a), np.random.randn(vocab_size, n_a)
+    b, by = np.random.randn(n_a, 1), np.random.randn(vocab_size, 1)
+    parameters = {"Wax": Wax, "Waa": Waa, "Wya": Wya, "b": b, "by": by}
+
+
+    indices = sample(parameters, char_to_ix, 0)
+    print("Sampling:")
+    print("list of sampled indices:", indices, '\n')
+    print("list of sampled characters:", [ix_to_char[i] for i in indices])
