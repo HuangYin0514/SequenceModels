@@ -98,4 +98,29 @@ if __name__ == '__main__':
     print("caches[1][1[1]] =", caches[1][1][1])
     print("c[1][2][1]", c[1][2][1])
     print("len(caches) = ", len(caches))
+    
+    # rnn_backward test
+    np.random.seed(1)
+    x = np.random.randn(3,10,4)
+    a0 = np.random.randn(5,10)
+    Wax = np.random.randn(5,3)
+    Waa = np.random.randn(5,5)
+    Wya = np.random.randn(2,5)
+    ba = np.random.randn(5,1)
+    by = np.random.randn(2,1)
+    parameters = {"Wax": Wax, "Waa": Waa, "Wya": Wya, "ba": ba, "by": by}
+    a, y, caches = rnn_forward(x, a0, parameters)
+    da = np.random.randn(5, 10, 4)
+    gradients = rnn_backward(da, caches)
+
+    print("gradients[\"dx\"][1][2] =", gradients["dx"][1][2])
+    print("gradients[\"dx\"].shape =", gradients["dx"].shape)
+    print("gradients[\"da0\"][2][3] =", gradients["da0"][2][3])
+    print("gradients[\"da0\"].shape =", gradients["da0"].shape)
+    print("gradients[\"dWax\"][3][1] =", gradients["dWax"][3][1])
+    print("gradients[\"dWax\"].shape =", gradients["dWax"].shape)
+    print("gradients[\"dWaa\"][1][2] =", gradients["dWaa"][1][2])
+    print("gradients[\"dWaa\"].shape =", gradients["dWaa"].shape)
+    print("gradients[\"dba\"][4] =", gradients["dba"][4])
+    print("gradients[\"dba\"].shape =", gradients["dba"].shape)
     """
