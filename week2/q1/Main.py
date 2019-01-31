@@ -3,7 +3,11 @@
 # @Author   : HuangYin
 # @FileName : Main.py
 # @Software : PyCharm
+
 from week2.q1.MyMethod import *
+from w2v_utils import *
+import numpy as np
 
 if __name__ == '__main__':
+
     pass
