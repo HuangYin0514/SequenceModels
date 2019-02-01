@@ -86,3 +86,4 @@ if __name__ == '__main__':
     print(pd.crosstab(Y_test, pred_test.reshape(56, ), rownames=['Actual'], colnames=['Predicted'], margins=True))
     plot_confusion_matrix(Y_test, pred_test)
     plt.show()
+
